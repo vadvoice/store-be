@@ -4,10 +4,12 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require('cors');
+const { appConfig } = require('../config');
 
 // routes modules
 const indexRouter = require('../routes/index');
 const userRouter = require('../routes/users');
+const productRouter = require('../routes/products');
 
 module.exports = async ({ app, db }) => {
     // view engine setup
@@ -15,7 +17,10 @@ module.exports = async ({ app, db }) => {
     app.set('view engine', 'jade');
 
     // cors
-    app.use(cors());
+    app.use(cors({
+        credentials: true,
+        origin: appConfig.origin
+    }));
 
     // logger
     app.use(logger('dev'));
@@ -37,7 +42,8 @@ module.exports = async ({ app, db }) => {
 
     // API
     app.use('/', indexRouter);
-    app.use('/users', userRouter);
+    app.use('/api/users', userRouter);
+    app.use('/api/products', productRouter);
 
     // catch 404 and forward to error handler
     app.use((req, res, next) => {
