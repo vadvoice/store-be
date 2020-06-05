@@ -4,6 +4,8 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require('cors');
+const bodyParser = require('body-parser');
+
 const { appConfig } = require('../config');
 
 // routes modules
@@ -15,6 +17,9 @@ module.exports = async ({ app, db }) => {
     // view engine setup
     app.set('views', path.join(__dirname, '../views'));
     app.set('view engine', 'jade');
+
+    // parse application/x-www-form-urlencoded 
+    // app.use(bodyParser.urlencoded({ extended: true }))
 
     // cors
     app.use(cors({
@@ -33,6 +38,7 @@ module.exports = async ({ app, db }) => {
 
     // public folders
     app.use(express.static(path.join(__dirname, '../public')));
+    app.use(express.static(path.join(__dirname, '../uploads')));
 
     // make DB available globally
     app.use((req, res, next) => {

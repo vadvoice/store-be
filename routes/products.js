@@ -1,47 +1,70 @@
 const express = require('express');
 const router = express.Router();
-const { ProductModel } = require('../models');
+
+const { ProductRepo } = require('../repository');
+const { isIdValid, uploadFile } = require('../middlewares');
+
+const uploadStrategy = uploadFile('image');
+
+//TODO: protect routes with TOKEN checker
 
 /**
  * GET products list.
  */
 router.get('/', async (req, res, next) => {
-   const products = await ProductModel.find();
-   setTimeout(() => {
-      // TODO: placeholder
-      const products = [
-         {
-            image: 'https://images.unsplash.com/photo-1479659929431-4342107adfc1?dpr=2&auto=compress,format&fit=crop&w=1199&h=799&q=80&cs=tinysrgb&crop=',
-            title: 'Canyons',
-            description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.'
-         },
-         {
-            image: 'https://images.unsplash.com/photo-1479659929431-4342107adfc1?dpr=2&auto=compress,format&fit=crop&w=1199&h=799&q=80&cs=tinysrgb&crop=',
-            title: 'asdsafsadf',
-            description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.'
-         },
-         {
-            image: 'https://images.unsplash.com/photo-1479644025832-60dabb8be2a1?dpr=2&auto=compress,format&fit=crop&w=1199&h=799&q=80&cs=tinysrgb&crop=',
-            title: 'Trees',
-            description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.'
-         },
-         {
-            image: 'https://images.unsplash.com/photo-1479621051492-5a6f9bd9e51a?dpr=2&auto=compress,format&fit=crop&w=1199&h=811&q=80&cs=tinysrgb&crop=',
-            title: 'Lakes',
-            description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.'
-         },
-      ]
+   try {
+      const products = await ProductRepo.list();
       res.json(products);
-   }, 2000)
+   } catch (e) {
+      next(e)
+   }
 });
 
 /**
  * POST craete product
  */
-router.post('/', async (req, res, next) => {
-   const { body } = req;
-   const product = await ProductModel.create(body);
-   res.json(product);
+router.post('/', uploadStrategy, async (req, res, next) => {
+   try {
+      const { body, file } = req;
+      let data = { ...body }
+      if (file) {
+         data.file = file;
+      }
+      const product = await ProductRepo.create(data);
+      res.json(product);
+   } catch (e) {
+      next(e)
+   }
+});
+
+/**
+ * PUT update product
+ */
+router.put('/:id', isIdValid, uploadStrategy, async (req, res, next) => {
+   const { body, file, params: { id } } = req;
+   try {
+      let productData = { ...body };
+      if (file) {
+        productData.file = file;
+      }
+      const product = await ProductRepo.update(id, productData);
+      res.json(product);
+   } catch(e) {
+      next(e);
+   }
+});
+
+/**
+ * DELETE remove product
+ */
+router.delete('/:id', isIdValid, async (req, res, next) => {
+   const { id } = req.params;
+   try {
+      const removedProduct = await ProductRepo.delete(id);
+      res.json(removedProduct);
+   } catch(e) {
+      next(e);
+   }
 });
 
 module.exports = router;

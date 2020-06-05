@@ -3,7 +3,11 @@ const { Schema, model } = mongoose;
 
 const ProductSchema = new Schema({
   title: String,
-  image: { type: String, unique: true },
+  imageUrl: {
+    type: String,
+    default: ''
+  },
+  blobName: String,
   description: String,
   createdAt: {
      type: Date,
