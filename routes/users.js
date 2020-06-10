@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const UserModel = require('../models/user.model');
+const { UserRepo } = require('../repository');
 
 /**
  * GET users list.
  */
 router.get('/', async (req, res, next) => {
-  const users = await UserModel.find();
+  const users = UserRepo.list();
   res.json(users);
 });
 
@@ -15,7 +15,7 @@ router.get('/', async (req, res, next) => {
  */
 router.post('/', async (req, res, next) => {
   const { body } = req;
-  const user = await UserModel.create(body);
+  const user = await UserRepo.create(body);
   res.json(user);
 });
 

@@ -12,6 +12,8 @@ const { appConfig } = require('../config');
 const indexRouter = require('../routes/index');
 const userRouter = require('../routes/users');
 const productRouter = require('../routes/products');
+const adminRouter = require('../routes/admin');
+const authRouter = require('../routes/auth');
 
 module.exports = async ({ app, db }) => {
     // view engine setup
@@ -50,6 +52,8 @@ module.exports = async ({ app, db }) => {
     app.use('/', indexRouter);
     app.use('/api/users', userRouter);
     app.use('/api/products', productRouter);
+    app.use('/api/admin', adminRouter);
+    app.use('/api/auth', authRouter);
 
     // catch 404 and forward to error handler
     app.use((req, res, next) => {

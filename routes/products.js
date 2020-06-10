@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const { ProductRepo } = require('../repository');
-const { isIdValid, uploadFile } = require('../middlewares');
+const { isIdValid, uploadFile, isTokenExists, isAdmin } = require('../middlewares');
 
 const uploadStrategy = uploadFile('image');
 
@@ -23,7 +23,7 @@ router.get('/', async (req, res, next) => {
 /**
  * POST craete product
  */
-router.post('/', uploadStrategy, async (req, res, next) => {
+router.post('/', isTokenExists, isAdmin, uploadStrategy, async (req, res, next) => {
    try {
       const { body, file } = req;
       let data = { ...body }
@@ -40,7 +40,7 @@ router.post('/', uploadStrategy, async (req, res, next) => {
 /**
  * PUT update product
  */
-router.put('/:id', isIdValid, uploadStrategy, async (req, res, next) => {
+router.put('/:id', isTokenExists, isAdmin, isIdValid, uploadStrategy, async (req, res, next) => {
    const { body, file, params: { id } } = req;
    try {
       let productData = { ...body };
@@ -57,7 +57,7 @@ router.put('/:id', isIdValid, uploadStrategy, async (req, res, next) => {
 /**
  * DELETE remove product
  */
-router.delete('/:id', isIdValid, async (req, res, next) => {
+router.delete('/:id', isTokenExists, isAdmin, isIdValid, async (req, res, next) => {
    const { id } = req.params;
    try {
       const removedProduct = await ProductRepo.delete(id);
