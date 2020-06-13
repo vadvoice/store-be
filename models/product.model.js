@@ -9,6 +9,11 @@ const ProductSchema = new Schema({
   },
   blobName: String,
   description: String,
+  amount: Number,
+  currency: {
+    type: String,
+    default: 'usd'
+  },
   createdAt: {
      type: Date,
      default: new Date()

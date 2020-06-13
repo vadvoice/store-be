@@ -7,6 +7,11 @@ const appConfig = {
   refreshTokenLife: process.env.REFRESH_TOKEN_LIFE,
   refreshTokenSecret: process.env.REFRESH_TOKEN_SECRET,
   salt: process.env.SALT,
+  stripe: {
+    stripeKey: process.env.STRIPE_KEY,
+    successUrl: process.env.STRIPE_SUCCESS_URL,
+    cancelUrl: process.env.STRIPE_CANCEL_URL
+  },
   azure: {
     accountName: process.env.AZURE_ACCOUNT_NAME,
     accountKey: process.env.AZURE_ACCOUNT_KEY,
