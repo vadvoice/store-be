@@ -1,4 +1,4 @@
-const { ProductModel } = require('../models');
+const { ProductModel, OrderModel } = require('../models');
 const { blobContainer } = require('../service/azure-blob-storage.service');
 
 const ProductRepo = {
@@ -41,13 +41,30 @@ const ProductRepo = {
    },
    delete: async (id) => {
       const foundProd = await ProductModel.findById(id);
+
+      const existingOrder = await OrderModel.findOne({
+         products: {
+            $in: [id]
+         },
+      });
+
+      if (existingOrder) {
+         return {
+            success: false,
+            message: `this product belongs to an active order ${existingOrder._id}`
+         }
+      }
+
       if (foundProd && foundProd.imageUrl) {
          console.time('blob deleting...')
          await blobContainer.deleteBlob(foundProd.blobName);
          console.timeEnd('blob deleting...')
       }
       const removedProduct = await ProductModel.findByIdAndDelete(id);
-      return removedProduct;
+      return {
+         success: true,
+         ...removedProduct.toJSON()
+      };
    }
 }
 

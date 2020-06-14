@@ -61,7 +61,11 @@ router.delete('/:id', isTokenExists, isAdmin, isIdValid, async (req, res, next) 
    const { id } = req.params;
    try {
       const removedProduct = await ProductRepo.delete(id);
-      res.json(removedProduct);
+      if (removedProduct.success) {
+         res.json(removedProduct);
+      } else {
+         res.status(404).json(removedProduct)
+      }
    } catch(e) {
       next(e);
    }
