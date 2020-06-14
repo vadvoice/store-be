@@ -35,8 +35,7 @@ const ProductRepo = {
          productData.imageUrl = blockBlobClient.url;
          productData.blobName = file.originalname;
       }
-      console.log('productData', productData)
-      // const product = await ProductModel.findOneAndUpdate({ _id: id }, productData);
+
       const product = await ProductModel.findByIdAndUpdate({ _id: id }, productData);
       return product;
    },

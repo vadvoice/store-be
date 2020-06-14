@@ -7,6 +7,12 @@ const ProductSchema = new Schema({
     type: String,
     default: ''
   },
+  // 0 - available, 1 - processing, 2 - sold out
+  status: {
+    type: Number,
+    enum: [0, 1, 2],
+    default: 0
+  },
   blobName: String,
   description: String,
   amount: Number,
