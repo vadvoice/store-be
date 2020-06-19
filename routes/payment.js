@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
 
-const { Stripe } = require('../service');
+const { Stripe, Mailgun } = require('../service');
 const { appConfig } = require('../config');
 const { OrderRepo } = require('../repository');
+const orderTemplate = require('../public/email-templates/order-template');
 
 /**
  * POST payment
@@ -43,7 +44,6 @@ router.post('/', async (req, res, next) => {
  */
 router.post('/checkout', async (req, res, next) => {
    const { products } = req.body;
-   console.log('req.body', req.body)
    if (!products || !Array.isArray(products) || !products.length) {
       return res.status(404).send('products array is required');
    }
@@ -55,10 +55,19 @@ router.post('/checkout', async (req, res, next) => {
             status: 404
          })
       }
-      console.log('order', order)
+
+      const data = {
+         from: "Mailgun Sandbox <postmaster@sandbox905bb5f0c8774509bbd94974d4ecaace.mailgun.org>",
+         to: req.body.email,
+         subject: "Order processed",
+         html: `${orderTemplate}`
+      };
+      Mailgun.messages().send(data, function (error, body) {
+         console.log('boody', body);
+      });
+
       res.json(order)
    } catch(e) {
-      console.log('checl!!!!!----')
       console.error(e);
       next(e);
    }

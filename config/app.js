@@ -16,6 +16,10 @@ const appConfig = {
     accountName: process.env.AZURE_ACCOUNT_NAME,
     accountKey: process.env.AZURE_ACCOUNT_KEY,
     containerName: process.env.AZURE_BLOB_CONTAINER
+  },
+  mailgun: {
+    apiKey: process.env.MAILGUN_API_KEY,
+    domain: process.env.MAILGUN_DOMAIN
   }
 };
 
