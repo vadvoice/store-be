@@ -18,6 +18,12 @@ const OrderSchema = new Schema({
     type: String,
     default: 'usd'
   },
+  // 0 - processing, 1 - resolved, 1> - issue
+  status: {
+    type: Number,
+    enum: [0, 1],
+    default: 0
+  },
   createdAt: {
      type: Date,
      default: new Date()

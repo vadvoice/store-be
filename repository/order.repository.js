@@ -28,16 +28,27 @@ const UserRepo = {
       // create order
       const order = await OrderModel.create(preparedData);
       // update products status
-      await ProductModel.update({ '_id': {
+      await ProductModel.updateMany({ '_id': {
          $in: products.map(prod => ObjectId(prod))
       }}, { status: 1 });
 
       //
       return {
          success: true,
-         ...order
+         ...order.toJSON()
       };
    },
+   activeOrders: async () => {
+      const orders = await OrderModel.find().populate('products');
+      return orders;
+   },
+   resolve: async (id) => {
+      const order = await OrderModel.findOneAndUpdate({ _id: id }, { status: 1 });
+      await ProductModel.updateMany({ '_id': {
+         $in: order.products.map(prod => ObjectId(prod))
+      }}, { status: 2 });
+      return order;
+   }
 }
 
 module.exports = UserRepo;

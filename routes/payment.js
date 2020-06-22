@@ -5,6 +5,8 @@ const { Stripe, Mailgun } = require('../service');
 const { appConfig } = require('../config');
 const { OrderRepo } = require('../repository');
 const orderTemplate = require('../public/email-templates/order-template');
+const { ProductModel } = require('../models');
+const { Types: { ObjectId } } = require('mongoose');
 
 /**
  * POST payment
@@ -55,18 +57,23 @@ router.post('/checkout', async (req, res, next) => {
             status: 404
          })
       }
+      const products = await ProductModel.find({ '_id': { $in: order.products.map(id => ObjectId(id)) } });
+      const emailTemplateData = { ...order, products };
 
       const data = {
          from: "Mailgun Sandbox <postmaster@sandbox905bb5f0c8774509bbd94974d4ecaace.mailgun.org>",
          to: req.body.email,
          subject: "Order processed",
-         html: `${orderTemplate}`
+         html: `${orderTemplate(emailTemplateData)}`
       };
       Mailgun.messages().send(data, function (error, body) {
-         console.log('boody', body);
+         if (error) {
+            error(error);
+            next(error)
+         }
       });
 
-      res.json(order)
+      res.json(order);
    } catch(e) {
       console.error(e);
       next(e);
