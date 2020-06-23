@@ -4,9 +4,7 @@ const router = express.Router();
 const { ProductRepo } = require('../repository');
 const { isIdValid, uploadFile, isTokenExists, isAdmin } = require('../middlewares');
 
-const uploadStrategy = uploadFile('image');
-
-//TODO: protect routes with TOKEN checker
+const uploadStrategy = uploadFile('image', 'gallery');
 
 /**
  * GET products list.
@@ -25,10 +23,13 @@ router.get('/', async (req, res, next) => {
  */
 router.post('/', isTokenExists, isAdmin, uploadStrategy, async (req, res, next) => {
    try {
-      const { body, file } = req;
+      const { body, files } = req;
       let data = { ...body }
-      if (file) {
-         data.file = file;
+      if (files && files.image) {
+         data.file = files.image[0];
+      }
+      if (files && files.gallery) {
+         data.gallery = files.gallery;
       }
       const product = await ProductRepo.create(data);
       res.json(product);
@@ -41,15 +42,19 @@ router.post('/', isTokenExists, isAdmin, uploadStrategy, async (req, res, next) 
  * PUT update product
  */
 router.put('/:id', isTokenExists, isAdmin, isIdValid, uploadStrategy, async (req, res, next) => {
-   const { body, file, params: { id } } = req;
+   const { body, files, params: { id } } = req;
+   console.log('files', files)
    try {
       let productData = { ...body };
-      if (file) {
-        productData.file = file;
+      if (files && files.image) {
+         productData.file = files.image[0];
+      }
+      if (files && files.gallery) {
+         productData.gallery = files.gallery;
       }
       const product = await ProductRepo.update(id, productData);
       res.json(product);
-   } catch(e) {
+   } catch (e) {
       next(e);
    }
 });
@@ -66,7 +71,7 @@ router.delete('/:id', isTokenExists, isAdmin, isIdValid, async (req, res, next) 
       } else {
          res.status(404).json(removedProduct)
       }
-   } catch(e) {
+   } catch (e) {
       next(e);
    }
 });

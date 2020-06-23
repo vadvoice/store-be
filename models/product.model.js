@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const { Schema, model } = mongoose;
 
+const GalleryImage = new Schema({ name: String, url: String, size: Number });
+
 const ProductSchema = new Schema({
   title: String,
   imageUrl: {
@@ -12,6 +14,10 @@ const ProductSchema = new Schema({
     type: Number,
     enum: [0, 1, 2],
     default: 0
+  },
+  gallery: {
+    type: [GalleryImage],
+    default: []
   },
   blobName: String,
   description: String,
