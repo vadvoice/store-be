@@ -13,11 +13,10 @@ const ProductRepo = {
          data.imageUrl = blockBlobClient.url;
          data.blobName = file.originalname;
       }
-      if (gallery) {
+      if (gallery && gallery.length) {
          const savedFiles = await Promise.all(gallery.map(galleryFile => {
             return blobContainer.uploadBlockBlob(galleryFile.originalname, galleryFile.buffer, galleryFile.size);
          }))
-         console.log('savedFiles', savedFiles)
          data.gallery = savedFiles.map(({ blockBlobClient: { url } }, idx) => ({ name: gallery[idx].originalname, url }));
       }
       const product = await ProductModel.create(data);
@@ -25,18 +24,19 @@ const ProductRepo = {
    },
    update: async (id, data) => {
       let productData = { ...data };
-      const { file, gallery } = productData;
+      const { file, gallery = [] } = productData;
 
       // data preparation
       delete productData._id
 
+      const foundProd = await ProductModel.findById(id);
+
       // udpate main product image
       if (file) {
-         const foundProd = await ProductModel.findById(id);
          if (foundProd && foundProd.blobName) {
             console.time('blob deleting...')
             const { clientRequestId } = await blobContainer.deleteBlob(foundProd.blobName);
-            console.log('blob delete request: ', clientRequestId);
+            console.info('blob delete request: ', clientRequestId);
             console.timeEnd('blob deleting...')
          }
          const { blockBlobClient } = await blobContainer.uploadBlockBlob(file.originalname, file.buffer, file.size);
@@ -44,13 +44,16 @@ const ProductRepo = {
          productData.blobName = file.originalname;
       }
 
-      if (gallery) {
+      if (gallery && gallery.length) {
          const savedFiles = await Promise.all(gallery.map(galleryFile => {
             return blobContainer.uploadBlockBlob(galleryFile.originalname, galleryFile.buffer, galleryFile.size);
          }))
          productData.gallery = savedFiles.map(({ blockBlobClient: { url } }, idx) => ({ name: gallery[idx].originalname, url }));
+         productData.gallery = foundProd.gallery.concat(productData.gallery);
+      } else {
+         productData.gallery = foundProd.gallery;
       }
-      
+
       const product = await ProductModel.findByIdAndUpdate({ _id: id }, productData);
       return product;
    },
@@ -80,6 +83,11 @@ const ProductRepo = {
          success: true,
          ...removedProduct.toJSON()
       };
+   },
+   deleteGalleryItem: async (productId, galleryImageId) => {
+      await ProductModel.findByIdAndUpdate(productId, { $pull: { "gallery": { name: galleryImageId } } }, { safe: true, upsert: true });
+      const { clientRequestId } = await blobContainer.deleteBlob(galleryImageId);
+      return clientRequestId;
    }
 }
 

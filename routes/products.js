@@ -43,14 +43,17 @@ router.post('/', isTokenExists, isAdmin, uploadStrategy, async (req, res, next) 
  */
 router.put('/:id', isTokenExists, isAdmin, isIdValid, uploadStrategy, async (req, res, next) => {
    const { body, files, params: { id } } = req;
-   console.log('files', files)
    try {
       let productData = { ...body };
       if (files && files.image) {
          productData.file = files.image[0];
+      } else {
+         productData.file = null;
       }
       if (files && files.gallery) {
          productData.gallery = files.gallery;
+      } else {
+         productData.gallery = [];
       }
       const product = await ProductRepo.update(id, productData);
       res.json(product);
@@ -73,6 +76,23 @@ router.delete('/:id', isTokenExists, isAdmin, isIdValid, async (req, res, next) 
       }
    } catch (e) {
       next(e);
+   }
+});
+
+/**
+ * DELETE delete gallery item
+ */
+router.delete('/:productId/gallery/:galleryImageId', isTokenExists, isAdmin, async (req, res, next) => {
+   const { productId, galleryImageId } = req.params;
+   if (productId && galleryImageId) {
+      try {
+         const removedProductGalleryItem = await ProductRepo.deleteGalleryItem(productId, galleryImageId);
+         res.json(removedProductGalleryItem);
+      } catch (e) {
+         next(e);
+      }
+   } else {
+      res.send('productId, galleryImageId are required')
    }
 });
 
