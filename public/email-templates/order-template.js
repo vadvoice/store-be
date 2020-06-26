@@ -160,7 +160,7 @@ const orderTemplate = (order) => `
          padding-top: 25px;
          color: #000000;
          font-family: sans-serif;" class="header">
-                     You can search for new products
+                     Thank you for your order
                   </td>
                </tr>
 
@@ -171,7 +171,7 @@ const orderTemplate = (order) => `
          padding-top: 5px;
          color: #000000;
          font-family: sans-serif;" class="subheader">
-                     Original ideas
+                     We will contact you soon
                   </td>
                </tr>
 
@@ -181,9 +181,9 @@ const orderTemplate = (order) => `
                   <tr>
                      <td align="center" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0;
          padding-top: 20px;" class="hero"><a target="_blank" style="text-decoration: none;"
-                           href="${appConfig.origin}"><img border="0" vspace="0" hspace="0"
+                           href="${appConfig.origin}/about"><img border="0" vspace="0" hspace="0"
                               src="https://vshop.blob.core.windows.net/common/v.jpg"
-                              alt="Please enable images to view this content" title="Hero Image" width="560"
+                              alt="Please enable images to view this content" title="Return to the store" width="560"
                               style="
          width: 100%;
          max-width: 560px;
@@ -197,7 +197,7 @@ const orderTemplate = (order) => `
          padding-top: 25px; 
          color: #000000;
          font-family: sans-serif;" class="paragraph">
-                        Free shipping.
+                        Call to actions.
                      </td>
                   </tr>
 
@@ -216,8 +216,8 @@ const orderTemplate = (order) => `
                                        style="padding: 12px 24px; margin: 0; text-decoration: underline; border-collapse: collapse; border-spacing: 0; border-radius: 4px; -webkit-border-radius: 4px; -moz-border-radius: 4px; -khtml-border-radius: 4px;"
                                        bgcolor="#E9703E"><a target="_blank" style="text-decoration: underline;
                color: #FFFFFF; font-family: sans-serif; font-size: 17px; font-weight: 400; line-height: 120%;"
-                                          href="${appConfig.origin}">
-                                          Get the template
+                                          href="${appConfig.origin}/store">
+                                          Return to the store
                                        </a>
                                     </td>
                                  </tr>
@@ -246,7 +246,7 @@ const orderTemplate = (order) => `
 
                               <!-- LIST ITEM -->
                               ${order.products.map(product => {
-   return `<tr>
+                                 return `<tr>
 
                                     <!-- LIST ITEM IMAGE -->
                                     <!-- Image text color should be opposite to background color. Set your url, image src, alt and title. Alt text should fit the image size. Real image size should be x2 -->
@@ -259,17 +259,36 @@ const orderTemplate = (order) => `
                                     <!-- LIST ITEM TEXT -->
                                     <!-- Set text color and font family ("sans-serif" or "Georgia, serif"). Duplicate all text styles in links, including line-height -->
                                     <td align="left" valign="top" style="font-size: 17px; font-weight: 400; line-height: 160%; border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0;
-                  padding-top: 25px;
+                  padding-top: 25px; padding-right: 20px;
                   color: #000000;
                   font-family: sans-serif;" class="paragraph">
                                        <b style="color: #333333;">${product.title}</b><br />
                                        ${product.description}
                                     </td>
 
+                                    <td align="left" valign="top" style="font-size: 17px; font-weight: 400; line-height: 160%; border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0;
+                  padding-top: 25px;
+                  color: #000000;
+                  font-family: sans-serif;" class="paragraph">
+                                       <b style="color: #F7455E;">${product.amount} ${product.currency}</b>
+                                    </td>
+
                                  </tr>`
-})}
+                                 })}
                            </table>
                         </td>
+                     </tr>
+
+                     <!-- TOTAL -->
+                     <!-- show total amount -->
+                     <tr>
+                        <td align="left" valign="top" style="text-align: center; font-size: 17px; font-weight: 400; line-height: 160%; border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0;
+                                 padding-top: 25px;
+                                 color: #F7455E;
+                                 font-family: sans-serif;" class="paragraph">
+                                    <b style="color: #333333;">Total:</b><br/>
+                                    ${order.products.reduce((acc, prod) => acc + prod.amount, 0)} ${order.products[0].currency}
+                              </td>
                      </tr>
 
                      <!-- LINE -->
