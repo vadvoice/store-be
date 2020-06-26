@@ -48,6 +48,13 @@ const UserRepo = {
          $in: order.products.map(prod => ObjectId(prod))
       }}, { status: 2 });
       return order;
+   },
+   reject: async (id) => {
+      const order = await OrderModel.findOneAndUpdate({ _id: id }, { status: 2 });
+      await ProductModel.updateMany({ '_id': {
+         $in: order.products.map(prod => ObjectId(prod))
+      }}, { status: 0 });
+      return order;
    }
 }
 

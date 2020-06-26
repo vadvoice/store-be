@@ -20,4 +20,13 @@ router.post('/resolve/:orderId', async (req, res, next) => {
    res.json(resolve);
 })
 
+/**
+ * POST resolve order
+ */
+router.post('/reject/:orderId', async (req, res, next) => {
+   const { orderId } = req.params;
+   const resolve = await OrderRepo.reject(orderId);
+   res.json(resolve);
+})
+
 module.exports = router;
