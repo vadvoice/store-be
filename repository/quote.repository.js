@@ -9,7 +9,7 @@ const QuoteRepo = {
       return await QuoteModel.create(data);
    },
    delete: async (id) => {
-      return await QuoteModel.delete(id);
+      return await QuoteModel.findOneAndDelete({ _id: id })
    }
 }
 
