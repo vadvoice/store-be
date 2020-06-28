@@ -18,6 +18,7 @@ const paymentRouter = require('../routes/payment');
 const orderRouter = require('../routes/order');
 const statsRouter = require('../routes/stats');
 const feedbackRouter = require('../routes/feedback');
+const quotesRouter = require('../routes/quotes');
 
 module.exports = async ({ app, db }) => {
     // view engine setup
@@ -62,6 +63,7 @@ module.exports = async ({ app, db }) => {
     app.use('/api/orders', orderRouter);
     app.use('/api/stats', statsRouter);
     app.use('/api/feedback', feedbackRouter);
+    app.use('/api/quotes', quotesRouter);
 
     // catch 404 and forward to error handler
     app.use((req, res, next) => {
