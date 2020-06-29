@@ -182,7 +182,7 @@ const orderTemplate = (order) => `
                      <td align="center" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0;
          padding-top: 20px;" class="hero"><a target="_blank" style="text-decoration: none;"
                            href="${appConfig.origin}/about"><img border="0" vspace="0" hspace="0"
-                              src="https://vshop.blob.core.windows.net/common/v.jpg"
+                              src="https://vshop.blob.core.windows.net/common/logo.png"
                               alt="Please enable images to view this content" title="Return to the store" width="560"
                               style="
          width: 100%;
@@ -242,10 +242,10 @@ const orderTemplate = (order) => `
                            style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 6.25%; padding-right: 6.25%;"
                            class="list-item">
                            <table align="center" border="0" cellspacing="0" cellpadding="0"
-                              style="width: inherit; margin: 0; padding: 0; border-collapse: collapse; border-spacing: 0;">
+                              style="width: 100%; margin: 0; padding: 0; border-collapse: collapse; border-spacing: 0;">
 
                               <!-- LIST ITEM -->
-                              ${order.products.map(product => {
+                              ${order.products.filter(el => el != null).map(product => {
                                  return `<tr>
 
                                     <!-- LIST ITEM IMAGE -->
@@ -274,7 +274,7 @@ const orderTemplate = (order) => `
                                     </td>
 
                                  </tr>`
-                                 })}
+                                 }).join('')}
                            </table>
                         </td>
                      </tr>
