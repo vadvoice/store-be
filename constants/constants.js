@@ -1,4 +1,7 @@
 const constants = {
+   app: {
+      titile: 'Vizion Arts'
+   },
    links: {
       github: 'https://github.com/vadvoice',
       linkedin: 'https://www.linkedin.com/in/vadym-shevchenko-92614a134/',
@@ -6,7 +9,7 @@ const constants = {
       instagram: 'https://www.instagram.com/fury_grace/'
    },
    emails: {
-      support: 'support@gmail.com'
+      support: 'support.vizionarts.com'
    }
 }
 

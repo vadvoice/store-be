@@ -39,7 +39,7 @@ const UserRepo = {
       };
    },
    activeOrders: async () => {
-      const orders = await OrderModel.find().populate('products');
+      const orders = await OrderModel.find().sort('-createdAt').populate('products');
       return orders;
    },
    resolve: async (id) => {

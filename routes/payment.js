@@ -7,6 +7,7 @@ const { OrderRepo } = require('../repository');
 const orderTemplate = require('../public/email-templates/order-template');
 const { ProductModel } = require('../models');
 const { Types: { ObjectId } } = require('mongoose');
+const { constants } = require('../constants');
 
 /**
  * POST payment
@@ -61,14 +62,14 @@ router.post('/checkout', async (req, res, next) => {
       const emailTemplateData = { ...order, products };
 
       const data = {
-         from: "Mailgun Sandbox <postmaster@sandbox905bb5f0c8774509bbd94974d4ecaace.mailgun.org>",
+         from: `${constants.app.titile} <postmaster@${appConfig.mailgun.domain}>`,
          to: req.body.email,
-         subject: "Order processed",
-         html: `${orderTemplate(emailTemplateData)}`
+         subject: `Order processed: ${order._id}`,
+         html: `${orderTemplate(emailTemplateData)}`,
       };
       Mailgun.messages().send(data, function (error, body) {
          if (error) {
-            error(error);
+            console.error(error);
             next(error)
          }
       });
