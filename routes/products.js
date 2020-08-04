@@ -76,10 +76,8 @@ router.put('/:id', isTokenExists, isAdmin, isIdValid, uploadStrategy, async (req
  */
 router.post('/:id/mark', isTokenExists, isAdmin, isIdValid, async (req, res, next) => {
    const { body, params: { id } } = req;
-   console.log('id', id)
    try {
       if (body.hasOwnProperty('mark')) {
-         console.log('body.mark', body.mark)
          const product = await ProductRepo.mark(id, {mark: body.mark});
          res.json(product);
       } else {
