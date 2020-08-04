@@ -3,6 +3,10 @@ const { blobContainer } = require('../service/azure-blob-storage.service');
 
 const ProductRepo = {
    list: async () => {
+      const products = await ProductModel.find({ mark: 0 });
+      return products;
+   },
+   rawList: async () => {
       const products = await ProductModel.find();
       return products;
    },
@@ -55,6 +59,10 @@ const ProductRepo = {
       }
 
       const product = await ProductModel.findByIdAndUpdate({ _id: id }, productData);
+      return product;
+   },
+   mark: async (id, data) => {
+      const product = await ProductModel.findByIdAndUpdate({ _id: id }, data);
       return product;
    },
    delete: async (id) => {

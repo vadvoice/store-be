@@ -18,6 +18,15 @@ router.get('/', async (req, res, next) => {
    }
 });
 
+router.get('/raw', async (req, res, next) => {
+   try {
+      const products = await ProductRepo.rawList();
+      res.json(products);
+   } catch (e) {
+      next(e)
+   }
+});
+
 /**
  * POST craete product
  */
@@ -57,6 +66,25 @@ router.put('/:id', isTokenExists, isAdmin, isIdValid, uploadStrategy, async (req
       }
       const product = await ProductRepo.update(id, productData);
       res.json(product);
+   } catch (e) {
+      next(e);
+   }
+});
+
+/**
+ * POST update product marker
+ */
+router.post('/:id/mark', isTokenExists, isAdmin, isIdValid, async (req, res, next) => {
+   const { body, params: { id } } = req;
+   console.log('id', id)
+   try {
+      if (body.hasOwnProperty('mark')) {
+         console.log('body.mark', body.mark)
+         const product = await ProductRepo.mark(id, {mark: body.mark});
+         res.json(product);
+      } else {
+         res.status(404).end('wrong data model');
+      }
    } catch (e) {
       next(e);
    }

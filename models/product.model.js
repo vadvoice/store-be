@@ -15,6 +15,12 @@ const ProductSchema = new Schema({
     enum: [0, 1, 2],
     default: 0
   },
+  mark: {
+    // 0 - visible, 1 - deleted
+    type: Number,
+    enum: [0, 1, 2],
+    default: 0
+  },
   gallery: {
     type: [GalleryImage],
     default: []
