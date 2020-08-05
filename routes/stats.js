@@ -4,8 +4,7 @@ const { StatsRepo } = require('../repository');
 const geoip = require('geoip-lite');
 const useragent = require('express-useragent');
 
-const isLocalhost = function (req){
-
+const isLocalhost = function (req) {
    const ip = req.connection.remoteAddress;
    const host = req.get('host');
    return ip === "127.0.0.1" || ip === "::ffff:127.0.0.1" || ip === "::1" || host.indexOf("localhost") !== -1;
@@ -17,7 +16,7 @@ const isLocalhost = function (req){
 router.post('/track', async (req, res, next) => {
    if (!isLocalhost(req)) {
       const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-      const stats = geoip.lookup(ip);
+      const stats = geoip.lookup(ip.split(':')[0]);
       const source = req.headers['user-agent'];
       const { browser, version, os, platform } = useragent.parse(source);
 
