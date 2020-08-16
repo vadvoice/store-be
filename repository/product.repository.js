@@ -1,9 +1,9 @@
-const { ProductModel, OrderModel } = require('../models');
+const { ProductModel, OrderModel, ProductVoteModel } = require('../models');
 const { blobContainer } = require('../service/azure-blob-storage.service');
 
 const ProductRepo = {
    list: async () => {
-      const products = await ProductModel.find({ mark: 0 });
+      const products = await ProductModel.find({ mark: 0 }).populate('productVote');
       return products;
    },
    rawList: async () => {
@@ -23,7 +23,9 @@ const ProductRepo = {
          }))
          data.gallery = savedFiles.map(({ blockBlobClient: { url } }, idx) => ({ name: gallery[idx].originalname, url }));
       }
-      const product = await ProductModel.create(data);
+      const productVote = await ProductVoteModel.create({});
+      const product = await ProductModel.create({ ...data, productVote });
+      await ProductVoteModel.findByIdAndUpdate({ _id: productVote._id }, {productId: product._id })
       return product;
    },
    update: async (id, data) => {
@@ -86,6 +88,8 @@ const ProductRepo = {
          await blobContainer.deleteBlob(foundProd.blobName);
          console.timeEnd('blob deleting...')
       }
+
+      await ProductVoteModel.findByIdAndDelete(foundProd.productVote);
       const removedProduct = await ProductModel.findByIdAndDelete(id);
       return {
          success: true,

@@ -2,8 +2,9 @@ const express = require('express');
 const router = express.Router();
 const { UserRepo } = require('../repository');
 const { AuthService } = require('../service');
+
 /**
- * GET users list.
+ * GET login.
  */
 router.post('/login', async (req, res, next) => {
    const { email, password } = req.body;
@@ -27,6 +28,14 @@ router.post('/login', async (req, res, next) => {
          message: 'Incorrect request.'
        })
    }
+});
+
+   /**
+ * GET user data.
+ */
+router.get('/user', async (req, res, next) => {
+   const userId = req.cookies['connect.sid'];
+   return res.json({ userId });
 });
 
 module.exports = router;

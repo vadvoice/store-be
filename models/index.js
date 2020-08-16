@@ -4,5 +4,6 @@ module.exports = {
    OrderModel: require('./order.model'),
    StatsModel: require('./stats.model'),
    FeedbackModel: require('./feedback.model'),
-   QuoteModel: require('./quote.model')
+   QuoteModel: require('./quote.model'),
+   ProductVoteModel: require('./product-vote.model')
 }

@@ -28,6 +28,7 @@ const ProductSchema = new Schema({
   blobName: String,
   description: String,
   amount: Number,
+  productVote: { type: Schema.Types.ObjectId, ref: 'productVote' },
   currency: {
     type: String,
     default: 'usd'

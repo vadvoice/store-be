@@ -6,5 +6,6 @@ module.exports = {
    OrderRepo: require('./order.repository'),
    StatsRepo: require('./stats.repository'),
    FeedbackRepo: require('./feedback.repository'),
-   QuoteRepo: require('./quote.repository')
+   QuoteRepo: require('./quote.repository'),
+   ProductVoteRepo: require('./productVote.repository')
 }

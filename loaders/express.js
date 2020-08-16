@@ -4,8 +4,7 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require('cors');
-const bodyParser = require('body-parser');
-
+const session = require('express-session');
 const { appConfig } = require('../config');
 
 // routes modules
@@ -19,8 +18,13 @@ const orderRouter = require('../routes/order');
 const statsRouter = require('../routes/stats');
 const feedbackRouter = require('../routes/feedback');
 const quotesRouter = require('../routes/quotes');
+const productVoteRouter = require('../routes/productVote');
+const config = require('../config');
 
 module.exports = async ({ app, db }) => {
+    // session
+    app.use(session({secret: config.appConfig.secret}));
+    
     // view engine setup
     app.set('views', path.join(__dirname, '../views'));
     app.set('view engine', 'jade');
@@ -64,6 +68,7 @@ module.exports = async ({ app, db }) => {
     app.use('/api/stats', statsRouter);
     app.use('/api/feedback', feedbackRouter);
     app.use('/api/quotes', quotesRouter);
+    app.use('/api/productVote', productVoteRouter);
 
     // catch 404 and forward to error handler
     app.use((req, res, next) => {
