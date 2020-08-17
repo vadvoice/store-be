@@ -15,8 +15,12 @@ router.get('/', async (req, res, next) => {
  */
 router.post('/', async (req, res, next) => {
   const { body } = req;
-  const user = await UserRepo.create(body);
-  res.json(user);
+  const userResponse = await UserRepo.create(body);
+  if (userResponse.isValid) {
+    return res.json(user);
+  } else {
+    return res.status(404).send(userResponse.message);
+  }
 });
 
 module.exports = router;

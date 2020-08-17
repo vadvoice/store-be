@@ -15,8 +15,21 @@ const UserRepo = {
       return await UserModel.isCorrectPassword(password);
    },
    create: async (data) => {
+      const { email } = data;
+      const existingUser = UserModel.find({ email });
+      if (existingUser) {
+         return {
+            isValid: false,
+            message: 'user with this email already exists',
+            user: null
+         }
+      }
       const user = await UserModel.create(data);
-      return user;
+      return {
+         isValid: true,
+         message: 'done',
+         user
+      };
    }
 }
 
