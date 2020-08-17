@@ -15,6 +15,12 @@ router.post('/', async (req, res, next) => {
    res.json(newQuote);
 });
 
+router.put('/:id', async (req, res, next) => {
+   const { id } = req.params;
+   const updatedQuote = await QuoteRepo.update(id, req.body);
+   res.json(updatedQuote);
+});
+
 router.delete('/:id', async (req, res, next) => {
    const { id } = req.params;
    const removedQuote = await QuoteRepo.delete(id);

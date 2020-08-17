@@ -8,6 +8,9 @@ const QuoteRepo = {
    create: async (data) => {
       return await QuoteModel.create(data);
    },
+   update: async (id, data) => {
+      return await QuoteModel.findOneAndUpdate({_id: id}, data);
+   },
    delete: async (id) => {
       return await QuoteModel.findOneAndDelete({ _id: id })
    }
