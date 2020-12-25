@@ -16,7 +16,7 @@ const UserRepo = {
    },
    create: async (data) => {
       const { email } = data;
-      const existingUser = UserModel.find({ email });
+      const existingUser = await UserModel.findOne({ email });
       if (existingUser) {
          return {
             isValid: false,
